@@ -331,4 +331,4 @@ export const AirdropABI = [
     type: 'function',
   },
   { stateMutability: 'payable', type: 'receive' },
-];
+] as const;
