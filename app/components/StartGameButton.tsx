@@ -1,18 +1,15 @@
 'use client';
 
 import { useAccount, useSwitchChain } from 'wagmi';
-import { useState } from 'react';
+import { useCapabilities, useWriteContracts } from 'wagmi/experimental';
+import { useState, useMemo } from 'react';
 import { AirdropABI } from '../utils/abis/AirdropABI';
-//import { AirdropSignedABI } from '../utils/abis/AirdropSignedABI';
-import { baseSepolia } from 'viem/chains';
-import { parseEther } from 'viem';
-import { encodeFunctionData } from 'viem';
-import { useSendCalls } from 'wagmi/experimental';
+import { base } from 'viem/chains';
+//import { parseEther } from 'viem';
 import {
   GAME_CONTRACT_ADDRESS,
-  PAYMASTER_URL_SEPOLIA,
-  //PLAY_FEE_USDC,
-  PLAY_FEE_ETH,
+  //PLAY_FEE_ETH,
+  PAYMASTER_URL,
 } from '../utils/constants';
 import { useRouter } from 'next/navigation';
 
@@ -23,7 +20,8 @@ export function StartGameButton() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const { switchChain } = useSwitchChain();
-  const { sendCallsAsync } = useSendCalls({
+
+  const { writeContracts } = useWriteContracts({
     mutation: {
       onSuccess: () => {
         setSuccess(true);
@@ -36,6 +34,29 @@ export function StartGameButton() {
     },
   });
 
+  const { data: availableCapabilities } = useCapabilities({
+    account: account.address,
+  });
+
+  const capabilities = useMemo(() => {
+    if (!availableCapabilities || !account.chainId) return {};
+    const capabilitiesForChain = availableCapabilities[account.chainId];
+    console.log('capabilitiesForChain', capabilitiesForChain);
+    if (
+      capabilitiesForChain['paymasterService'] &&
+      capabilitiesForChain['paymasterService'].supported
+    ) {
+      return {
+        paymasterService: {
+          url: PAYMASTER_URL,
+        },
+      };
+    }
+    return {};
+  }, [availableCapabilities, account.chainId]);
+
+  console.log(capabilities);
+
   const handleStartGame = async () => {
     if (!account.isConnected) {
       setError('Please connect your wallet first');
@@ -47,8 +68,8 @@ export function StartGameButton() {
       return;
     }
 
-    if (account.chainId !== baseSepolia.id) {
-      switchChain({ chainId: baseSepolia.id });
+    if (account.chainId !== base.id) {
+      switchChain({ chainId: base.id });
       return;
     }
 
@@ -57,24 +78,16 @@ export function StartGameButton() {
     setSuccess(false);
 
     try {
-      const data = encodeFunctionData({
-        abi: AirdropABI,
-        functionName: 'fundContract',
-      });
-
-      await sendCallsAsync({
-        calls: [
+      writeContracts({
+        contracts: [
           {
-            to: GAME_CONTRACT_ADDRESS,
-            data,
-            value: parseEther(PLAY_FEE_ETH),
+            address: GAME_CONTRACT_ADDRESS,
+            abi: AirdropABI,
+            functionName: 'startGame',
+            args: [true],
           },
         ],
-        capabilities: {
-          paymasterService: {
-            url: PAYMASTER_URL_SEPOLIA,
-          },
-        },
+        capabilities,
       });
     } catch (err) {
       console.error('Error starting game:', err);
