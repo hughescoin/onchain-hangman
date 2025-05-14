@@ -14,7 +14,6 @@ import {
   Identity,
   EthBalance,
 } from '@coinbase/onchainkit/identity';
-import { StartGameButton } from './components/StartGameButton';
 import { PlayButton } from './components/PlayButton';
 
 export default function App() {
@@ -83,17 +82,8 @@ export default function App() {
           </div>
 
           {/* Start Game Buttons */}
-          <div className='grid grid-cols-1 md:grid-cols-2 gap-4 mb-8'>
-            <div>
-              <h3 className='text-lg font-semibold mb-2 text-center'>
-                useWriteContract
-              </h3>
-              <StartGameButton />
-            </div>
-            <div>
-              <h3 className='text-lg font-semibold mb-2 text-center'>
-                useSendCalls
-              </h3>
+          <div className='flex justify-center mb-8'>
+            <div className='w-full max-w-md'>
               <PlayButton onSuccess={() => {}} />
             </div>
           </div>
