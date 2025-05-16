@@ -332,3 +332,5 @@ export const AirdropABI = [
   },
   { stateMutability: 'payable', type: 'receive' },
 ] as const;
+
+export const GAME_CONTRACT_ABI = AirdropABI;
