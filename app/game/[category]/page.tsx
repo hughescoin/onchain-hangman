@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { useAccount } from 'wagmi';
 
 interface Word {
   word: string;
@@ -32,6 +33,12 @@ export default function GameScreen({
   );
   const [availableHints, setAvailableHints] = useState(0);
   const [loading, setLoading] = useState(true);
+  const account = useAccount();
+  const [winApiStatus, setWinApiStatus] = useState<
+    'idle' | 'pending' | 'success' | 'error'
+  >('idle');
+  const [winApiError, setWinApiError] = useState<string | null>(null);
+  const [txHash, setTxHash] = useState<string | null>(null);
 
   const MAX_WRONG_GUESSES = 3;
 
@@ -58,6 +65,32 @@ export default function GameScreen({
 
     loadCategory();
   }, [params.category]);
+
+  useEffect(() => {
+    if (gameStatus === 'won' && account.address) {
+      setWinApiStatus('pending');
+      fetch('/api/win', {
+        method: 'POST',
+        body: JSON.stringify({
+          playerAddress: account.address,
+          score: 100, // Replace with actual score if available
+          gameId: params.category,
+        }),
+        headers: { 'Content-Type': 'application/json' },
+      })
+        .then(async (res) => {
+          if (!res.ok) throw new Error(await res.text());
+          const data = await res.json();
+          setWinApiStatus('success');
+          setTxHash(data.transactionHash);
+          console.log('Game win tx hash:', data.transactionHash);
+        })
+        .catch((err) => {
+          setWinApiStatus('error');
+          setWinApiError(err.message);
+        });
+    }
+  }, [gameStatus, account.address, params.category]);
 
   const handleLetterGuess = (letter: string) => {
     if (gameStatus !== 'playing' || guessedLetters.includes(letter)) return;
@@ -147,6 +180,33 @@ export default function GameScreen({
           {gameStatus !== 'playing' && (
             <div className='text-xl font-bold mb-4'>
               {gameStatus === 'won' ? '🎉 You Won!' : '😢 Game Over!'}
+            </div>
+          )}
+          {gameStatus === 'won' && winApiStatus === 'pending' && (
+            <div className='text-blue-500'>Recording your win onchain...</div>
+          )}
+          {gameStatus === 'won' && winApiStatus === 'success' && (
+            <div className='text-green-500'>
+              Win recorded onchain! 🪙
+              <br />
+              {txHash && (
+                <>
+                  Tx Hash:{' '}
+                  <a
+                    href={`https://basescan.org/tx/${txHash}`}
+                    target='_blank'
+                    rel='noopener noreferrer'
+                    className='underline'
+                  >
+                    {txHash}
+                  </a>
+                </>
+              )}
+            </div>
+          )}
+          {gameStatus === 'won' && winApiStatus === 'error' && (
+            <div className='text-red-500'>
+              Error recording win: {winApiError}
             </div>
           )}
         </div>
