@@ -2,7 +2,7 @@ import { CdpClient } from '@coinbase/cdp-sdk';
 import 'dotenv/config';
 import crypto from 'crypto';
 
-// @ts-ignore
+// @ts-expect-error: Node.js global.crypto may not exist, polyfill for CDP SDK
 if (!global.crypto) global.crypto = crypto;
 
 const cdpClient = new CdpClient({
