@@ -96,7 +96,7 @@ The game uses a smart contract deployed on Base network that handles:
 
 ### Contract Addresses
 
-- Base Sepolia: [0x352d55dd643ec049191d133a146be3086e0e1b85](https://sepolia.basescan.org/address/0x352d55dd643ec049191d133a146be3086e0e1b85#code)
+- Base Sepolia: [0x7eFc99DF7e8a2b01E2E3d905c37e45F8d3FB227F](https://sepolia.basescan.org/address/0x7eFc99DF7e8a2b01E2E3d905c37e45F8d3FB227F#code)
 
 ### Contract Functions
 
@@ -129,7 +129,6 @@ When a user wins, their address is recorded onchain via the `/api/win` endpoint 
 - CDP_API_KEY_SECRET
 - CDP_WALLET_SECRET
 - CDP_SIGNER_ADDRESS
-- GAME_CONTRACT_ADDRESS_SEPOLIA
 
 ---
 
