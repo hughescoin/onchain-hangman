@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createPublicClient, http, encodeFunctionData } from 'viem';
 import { base } from 'viem/chains';
-//import { GAME_CONTRACT_ADDRESS } from '@/app/utils/constants';
+import { GAME_CONTRACT_ADDRESS_SEPOLIA } from '@/app/utils/constants';
 import { GAME_CONTRACT_ABI } from '@/app/utils/abis/AirdropABI';
 import { getCDPAccountByAddress } from '@/lib/cdp/account';
 import { cdp } from '@/lib/cdp/client';
@@ -45,7 +45,7 @@ export async function POST(request: Request) {
       address: account.address,
       network: 'base',
       transaction: {
-        to: '0x9a68a6af680e33c59b7e1c34ecc8bbedf6b5b75b' as `0x${string}`,
+        to: GAME_CONTRACT_ADDRESS_SEPOLIA as `0x${string}`,
         data: txData,
       },
     });
