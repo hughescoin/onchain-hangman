@@ -113,14 +113,6 @@ The game uses a smart contract deployed on Base network that handles:
 3. Update the contract address in your environment variables
 4. Change the owner address to your server wallet address to use `onlyOwner` functions
 
-## 📜 License
-
-MIT
-
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
 ## Onchain Win Recording
 
 When a user wins, their address is recorded onchain via the `/api/win` endpoint using a Coinbase CDP account. See `RrcordOnchainSteps.md` for details. You must set the following in your `.env.local`:
@@ -129,6 +121,14 @@ When a user wins, their address is recorded onchain via the `/api/win` endpoint 
 - CDP_API_KEY_SECRET
 - CDP_WALLET_SECRET
 - CDP_SIGNER_ADDRESS
+
+## 📜 License
+
+MIT
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
 
 ---
 
