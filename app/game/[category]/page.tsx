@@ -52,7 +52,6 @@ export default function GameScreen({
         );
 
         if (category) {
-          // Randomly select a word from the category
           const randomIndex = Math.floor(Math.random() * category.words.length);
           setCurrentWord(category.words[randomIndex]);
         }
@@ -73,7 +72,7 @@ export default function GameScreen({
         method: 'POST',
         body: JSON.stringify({
           playerAddress: account.address,
-          score: 100, // Replace with actual score if available
+          score: 100,
           gameId: params.category,
         }),
         headers: { 'Content-Type': 'application/json' },
@@ -106,7 +105,6 @@ export default function GameScreen({
         setGameStatus('lost');
       }
     } else {
-      // Check if all letters have been guessed
       const allLettersGuessed = currentWord.word
         .split('')
         .every((letter) => newGuessedLetters.includes(letter));
@@ -132,7 +130,6 @@ export default function GameScreen({
   };
 
   const getHangmanState = () => {
-    // Return the appropriate hangman SVG based on wrong guesses
     return `Hangman state: ${wrongGuesses}/${MAX_WRONG_GUESSES}`;
   };
 

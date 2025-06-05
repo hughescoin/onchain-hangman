@@ -5,12 +5,7 @@ import { useCapabilities, useWriteContracts } from 'wagmi/experimental';
 import { useState, useMemo } from 'react';
 import { AirdropABI } from '../utils/abis/AirdropABI';
 import { base } from 'viem/chains';
-//import { parseEther } from 'viem';
-import {
-  GAME_CONTRACT_ADDRESS,
-  //PLAY_FEE_ETH,
-  PAYMASTER_URL,
-} from '../utils/constants';
+import { GAME_CONTRACT_ADDRESS, PAYMASTER_URL } from '../utils/constants';
 import { useRouter } from 'next/navigation';
 
 export function StartGameButton() {
