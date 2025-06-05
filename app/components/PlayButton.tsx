@@ -3,7 +3,7 @@
 import { useAccount, useSwitchChain, createConfig, http } from 'wagmi';
 import { useState } from 'react';
 import { AirdropABI } from '../utils/abis/AirdropABI';
-import { base } from 'viem/chains';
+import { baseSepolia } from 'viem/chains';
 import { parseEther } from 'viem';
 import { encodeFunctionData } from 'viem';
 import { useSendCalls } from 'wagmi/experimental';
@@ -20,9 +20,9 @@ interface PlayButtonProps {
 }
 
 export const config = createConfig({
-  chains: [base],
+  chains: [baseSepolia],
   transports: {
-    [base.id]: http(PAYMASTER_URL),
+    [baseSepolia.id]: http(PAYMASTER_URL),
   },
 });
 
@@ -47,10 +47,6 @@ export function PlayButton({ onSuccess, finalScore }: PlayButtonProps) {
     },
   });
 
-  // const capabilities = useCapabilities({ config });
-
-  // console.log(capabilities);
-
   const handlePlay = async () => {
     if (!account.isConnected) {
       setError('Please connect your wallet first');
@@ -58,12 +54,12 @@ export function PlayButton({ onSuccess, finalScore }: PlayButtonProps) {
     }
 
     if (!account.chainId) {
-      setError('Please connect to Base network');
+      setError('Please connect to Base Sepolia network');
       return;
     }
 
-    if (account.chainId !== base.id) {
-      switchChain({ chainId: base.id });
+    if (account.chainId !== baseSepolia.id) {
+      switchChain({ chainId: baseSepolia.id });
       return;
     }
 

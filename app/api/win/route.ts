@@ -1,13 +1,13 @@
 import { NextResponse } from 'next/server';
 import { createPublicClient, http, encodeFunctionData } from 'viem';
-import { base } from 'viem/chains';
+import { baseSepolia } from 'viem/chains';
 import { GAME_CONTRACT_ADDRESS_SEPOLIA } from '@/app/utils/constants';
 import { GAME_CONTRACT_ABI } from '@/app/utils/abis/AirdropABI';
 import { getCDPAccountByAddress } from '@/lib/cdp/account';
 import { cdp } from '@/lib/cdp/client';
 
 const publicClient = createPublicClient({
-  chain: base,
+  chain: baseSepolia,
   transport: http(),
 });
 
@@ -43,7 +43,7 @@ export async function POST(request: Request) {
 
     const txResult = await cdp.evm.sendTransaction({
       address: account.address,
-      network: 'base',
+      network: 'base-sepolia',
       transaction: {
         to: GAME_CONTRACT_ADDRESS_SEPOLIA as `0x${string}`,
         data: txData,
